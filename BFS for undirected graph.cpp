@@ -41,6 +41,7 @@ bool doBfs( size_t startVertex, size_t endVertex , const std::vector<std::vector
       if (marks[endVertex])
          return true;
    }
+
    return false;
 }
 
@@ -66,12 +67,12 @@ int main()
 
    auto startTime = std::chrono::high_resolution_clock::now();
 
-   bool isRouteExist = doBfs(startVertex, endVertex, graph);
+   bool routeFound = doBfs(startVertex, endVertex, graph);
 
    auto endTime = std::chrono::high_resolution_clock::now() - startTime;
    auto elapsedTime = std::chrono::duration<double>(endTime).count();
 
-   if (isRouteExist)
+   if (routeFound)
       out << "Route exists.\n";
    else
       out << "Route does NOT exist.\n";
