@@ -48,14 +48,14 @@ int main()
    in >> numVertex;
    std::vector<std::vector<size_t>> graph(numVertex, std::vector<size_t>(numVertex, -1));
 
-   for (size_t i = 0; i < numVertex; i++)
+   for (size_t iVertex = 0; iVertex < numVertex; iVertex++)
    {
-      for (size_t j = 0; j < numVertex; j++)
+      for (size_t jVertex = 0; jVertex < numVertex; jVertex++)
       {
          size_t weightVertex = 0;
          in >> weightVertex;
-         graph[i][j] = weightVertex;
-         graph[j][i] = weightVertex;
+         graph[iVertex][jVertex] = weightVertex;
+         graph[jVertex][iVertex] = weightVertex;
       }
    }
    
