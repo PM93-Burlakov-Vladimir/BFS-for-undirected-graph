@@ -3,9 +3,10 @@
 // 7. Определить, существует ли маршрут между двумя заданными вершинами в неориентированном графе. 
 // Граф в памяти представлять в виде матрицы.
 // 
-// Обход в глубину.
+// Обход в ширину.
 // Выполнили: Пятанин А., Коржов К., Ишутин М., Бурлаков В. (ПМ-93)
 // Автор: Бурлаков В.
+// Рефакторинг: Коржов К.
 
 #include <iostream>
 #include <fstream>
@@ -14,68 +15,66 @@
 #include <vector>
 #include <queue>
 
-std::vector<bool> g_Marks = {false};
 
-void doBfs( size_t sourceVertex, size_t destinationVertex , const std::vector<std::vector<size_t>> &graph )
+
+bool doBfs( size_t startVertex, size_t endVertex , const std::vector<std::vector<size_t>> &graph )
 {
-   std::queue<size_t> q;
-   q.push(sourceVertex);
+   std::vector<bool> marks(graph[0].size(), false);
+   marks[startVertex] = true;
 
-   while (!q.empty() && !g_Marks[destinationVertex - 1])
+   std::queue<size_t> q;
+   q.push(startVertex);
+
+   while (!q.empty())
    {
       size_t iVertex = q.front();
       q.pop();
 
       for (size_t jVertex = 0; jVertex < graph[iVertex].size(); jVertex++)
       {
-         if (!g_Marks[jVertex] && graph[iVertex][jVertex])
+         if (!marks[jVertex] && graph[iVertex][jVertex])
          {
             q.push(jVertex);
-            g_Marks[jVertex] = true;
+            marks[jVertex] = true;
          }
       }
+      if (marks[endVertex])
+         return true;
    }
+   return false;
 }
 
 int main()
 {
+   std::ios::sync_with_stdio(false);
+
    std::ifstream in("input.txt");
    std::ofstream out("output.txt");
 
-   std::ios::sync_with_stdio(false);
+   size_t vertexCount = 0;
+   in >> vertexCount;
+   std::vector<std::vector<size_t>> graph(vertexCount, std::vector<size_t>(vertexCount, -1));
 
-   size_t numVertex = 0;
-   in >> numVertex;
-   std::vector<std::vector<size_t>> graph(numVertex, std::vector<size_t>(numVertex, -1));
+   for (size_t iVertex = 0; iVertex < vertexCount; iVertex++)
+      for (size_t jVertex = 0; jVertex < vertexCount; jVertex++)
+         in >> graph[iVertex][jVertex];
 
-   for (size_t iVertex = 0; iVertex < numVertex; iVertex++)
-   {
-      for (size_t jVertex = 0; jVertex < numVertex; jVertex++)
-      {
-         size_t weightVertex = 0;
-         in >> weightVertex;
-         graph[iVertex][jVertex] = weightVertex;
-         graph[jVertex][iVertex] = weightVertex;
-      }
-   }
-   
-   size_t sourceVertex = 0, destinationVertex = 0;
-   in >> sourceVertex >> destinationVertex;
-
-   g_Marks.assign(numVertex, false);
-   g_Marks[sourceVertex - 1] = true;
+   size_t startVertex = 0, endVertex = 0;
+   in >> startVertex >> endVertex;
+   startVertex--;
+   endVertex--;
 
    auto startTime = std::chrono::high_resolution_clock::now();
 
-   doBfs(sourceVertex - 1, destinationVertex - 1, graph);
+   bool isRouteExit = doBfs(startVertex, endVertex, graph);
 
    auto endTime = std::chrono::high_resolution_clock::now() - startTime;
    auto elapsedTime = std::chrono::duration<double>(endTime).count();
 
-   if (!g_Marks[destinationVertex - 1])
-      out << "Route does NOT exist.\n";
-   else
+   if (isRouteExit)
       out << "Route exists.\n";
+   else
+      out << "Route does NOT exist.\n";
 
    out << "Algorithm time is " << elapsedTime << " seconds.\n";
 
