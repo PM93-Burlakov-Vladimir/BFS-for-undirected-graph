@@ -15,8 +15,6 @@
 #include <vector>
 #include <queue>
 
-
-
 bool doBfs( size_t startVertex, size_t endVertex , const std::vector<std::vector<size_t>> &graph )
 {
    std::vector<bool> marks(graph[0].size(), false);
