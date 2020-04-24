@@ -14,23 +14,25 @@
 #include <vector>
 #include <queue>
 
-std::vector<bool> marks;
+std::vector<bool> g_Marks = {false};
 
-void doBfs(size_t source, const std::vector<std::vector<size_t>> &graph)
+void doBfs( size_t sourceVertex, size_t destinationVertex , const std::vector<std::vector<size_t>> &graph )
 {
    std::queue<size_t> q;
-   q.push(source);
+   q.push(sourceVertex);
 
-   while (!q.empty())
+   while (!q.empty() && !g_Marks[destinationVertex - 1])
    {
-      size_t curr = q.front();
+      size_t iVertex = q.front();
       q.pop();
 
-      marks[curr] = true;
-      for (size_t i = 0; i < graph[curr].size(); i++)
+      for (size_t jVertex = 0; jVertex < graph[iVertex].size(); jVertex++)
       {
-         if (!marks[graph[curr][i]])
-            q.push(graph[curr][i]);
+         if (!g_Marks[jVertex] && graph[iVertex][jVertex])
+         {
+            q.push(jVertex);
+            g_Marks[jVertex] = true;
+         }
       }
    }
 }
@@ -41,36 +43,36 @@ int main()
    std::ofstream out("output.txt");
 
    std::ios::sync_with_stdio(false);
-   std::cin.tie(NULL);
 
-   size_t n = 0;
-   in >> n;
-   std::vector<std::vector<size_t>> graph(n, std::vector<size_t>(n, -1));
+   size_t numVertex = 0;
+   in >> numVertex;
+   std::vector<std::vector<size_t>> graph(numVertex, std::vector<size_t>(numVertex, -1));
 
-   for (size_t i = 0; i < n; i++)
+   for (size_t i = 0; i < numVertex; i++)
    {
-      for (size_t j = 0; j < n; j++)
+      for (size_t j = 0; j < numVertex; j++)
       {
-         size_t weight = 0;
-         in >> weight;
-         graph[i][j] = weight;
-         graph[j][i] = weight;
+         size_t weightVertex = 0;
+         in >> weightVertex;
+         graph[i][j] = weightVertex;
+         graph[j][i] = weightVertex;
       }
    }
+   
+   size_t sourceVertex = 0, destinationVertex = 0;
+   in >> sourceVertex >> destinationVertex;
 
-   size_t source = 0, destination = 0;
-   in >> source >> destination;
-
-   marks.assign(n, false);
+   g_Marks.assign(numVertex, false);
+   g_Marks[sourceVertex - 1] = true;
 
    auto startTime = std::chrono::high_resolution_clock::now();
 
-   doBfs(source - 1, graph);
+   doBfs(sourceVertex - 1, destinationVertex - 1, graph);
 
    auto endTime = std::chrono::high_resolution_clock::now() - startTime;
    auto elapsedTime = std::chrono::duration<double>(endTime).count();
 
-   if (!marks[destination - 1])
+   if (!g_Marks[destinationVertex - 1])
       out << "Route does NOT exist.\n";
    else
       out << "Route exists.\n";

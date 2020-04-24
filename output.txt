@@ -1,2 +1,2 @@
 Route exists.
-Algorithm time is 1.53e-05 seconds.
+Algorithm time is 3.13e-05 seconds.
