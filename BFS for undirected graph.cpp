@@ -66,12 +66,12 @@ int main()
 
    auto startTime = std::chrono::high_resolution_clock::now();
 
-   bool isRouteExit = doBfs(startVertex, endVertex, graph);
+   bool isRouteExist = doBfs(startVertex, endVertex, graph);
 
    auto endTime = std::chrono::high_resolution_clock::now() - startTime;
    auto elapsedTime = std::chrono::duration<double>(endTime).count();
 
-   if (isRouteExit)
+   if (isRouteExist)
       out << "Route exists.\n";
    else
       out << "Route does NOT exist.\n";
