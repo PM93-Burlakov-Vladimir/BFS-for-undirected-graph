@@ -71,11 +71,11 @@ int main()
    auto elapsedTime = std::chrono::duration<double>(endTime).count();
 
    if (routeFound)
-      out << "Route exists.\n";
+      out << "Route exists." << std::endl;
    else
-      out << "Route does NOT exist.\n";
+      out << "Route is absent." << std::endl;
 
-   out << "Algorithm time is " << elapsedTime << " seconds.\n";
+   out << "Algorithm time is " << elapsedTime << " seconds." << std::endl;
 
    return 0;
 }
