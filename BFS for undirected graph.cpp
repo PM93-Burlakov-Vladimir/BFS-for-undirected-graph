@@ -15,7 +15,7 @@
 #include <vector>
 #include <queue>
 
-bool doBfs( size_t startVertex, size_t endVertex , const std::vector<std::vector<size_t>> &graph )
+bool doBfs( size_t startVertex, size_t targetVertex , const std::vector<std::vector<size_t>> &graph )
 {
    std::vector<bool> marks(graph[0].size(), false);
    marks[startVertex] = true;
@@ -36,7 +36,7 @@ bool doBfs( size_t startVertex, size_t endVertex , const std::vector<std::vector
             marks[jVertex] = true;
          }
       }
-      if (marks[endVertex])
+      if (marks[targetVertex])
          return true;
    }
 
@@ -58,14 +58,14 @@ int main()
       for (size_t jVertex = 0; jVertex < vertexCount; jVertex++)
          in >> graph[iVertex][jVertex];
 
-   size_t startVertex = 0, endVertex = 0;
-   in >> startVertex >> endVertex;
+   size_t startVertex = 0, targetVertex = 0;
+   in >> startVertex >> targetVertex;
    startVertex--;
-   endVertex--;
+   targetVertex--;
 
    auto startTime = std::chrono::high_resolution_clock::now();
 
-   bool routeFound = doBfs(startVertex, endVertex, graph);
+   bool routeFound = doBfs(startVertex, targetVertex, graph);
 
    auto endTime = std::chrono::high_resolution_clock::now() - startTime;
    auto elapsedTime = std::chrono::duration<double>(endTime).count();
